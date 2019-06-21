@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="../CScroll.js"></script>
+    <title>CScroll</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="scroll">
+            <div>
+                <div class="banner">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                    </ul>
+                </div>
+                <div style='width:375px;height:800px;background: red;'></div>
+                <div style='width:375px;height:800px;background: orange;'></div>
+                <div style='width:375px;height:800px;background: blue;'></div>
+                <div style='width:375px;height:800px;background: pink;'></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            let scroll = new CScroll(document.querySelector('.scroll'), {
+                scrollX: false,
+            })
+            function demo_1(){
+                console.log('demo_1')
+            }
+            function demo_2(){
+                console.log('down_2')
+                console.log(this)
+            }
+            scroll.on('onTouchEnd',demo_1)
+            scroll.on('onTouchEnd',demo_2)
+            // scroll.removeOn('onTouchEnd',demo_1)
+            // scroll.removeOn('onTouchEnd',)
+            let banner = new CScroll(document.querySelector('.banner'), {
+                scrollX: true,
+                direction: 'X',
+                swiper: {
+                    // loop: true
+                }
+            })
+            function demo_3(){
+                console.log('demo_3')
+                console.log(this)
+            }
+            banner.on('onTouchEnd',demo_3)
+            console.log(scroll)
+            console.log(banner)
+        }
+
+    </script>
+</body>
+<style>
+    body {
+        margin: 0px;
+    }
+
+    .banner {
+        width: 375px;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .banner ul {
+        margin: 0px;
+        padding: 0px;
+        display: flex;
+        margin: 0px;
+        list-style: none;
+    }
+
+    .banner li {
+        width: 375px;
+        height: 200px;
+        background: green;
+    }
+
+    .scroll{
+        width: 375px;
+        height: 815px;
+        overflow: hidden;
+    }
+</style>
+
+</html>
