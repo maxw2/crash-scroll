@@ -1,11 +1,11 @@
 export default {
     input: 'src/CScroll.js',
     output: [{
-        file: 'CScroll.js',
+        file: 'build/CScroll.js',
         format: 'iife',
         name: 'CScroll'
     }, {
-        file: 'es_CScroll.js',
+        file: 'build/es_CScroll.js',
         format: 'es',
         name: 'CScroll',
     }]
