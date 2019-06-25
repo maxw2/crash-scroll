@@ -32,28 +32,41 @@ const _Event = function (CScroll) {
 
     // TouchStart
     CScroll.prototype.EventTouchStart = function (ev) {
-        // ev.preventDefault()
-        // if (!this.$op.direction || this.$op._swiper) {
-            window.cancelAnimationFrame(this.$event.time)
-            // window.cancelAnimationFrame(this.$event.timer)
-        // }
+        ev.preventDefault()
+
+        window.cancelAnimationFrame(this.$event.time)
+        if (!this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
+
         this.initiaDirection()
 
+        /**
+         * 
+         */
         this._this.dt = ev.timeStamp
         this._this.dx = ev.touches[0].clientX
         this._this.dy = ev.touches[0].clientY
 
+        /**
+         * 
+         */
         if (this.$op.direction) this.$op.stopPropagation = true
+
         this.$event.onTouchStart()
     }
-    
+
     // TouchMove
     CScroll.prototype.EventTouchMove = function (ev) {
+        /**
+         * touchesMove
+         * 处理数据
+         */
+
         ev.preventDefault()
         // 当前停止还是上层事件停止
         if (this.$op.skipCurrent) return
         if (this.$op.stopPropagation) ev.stopPropagation()
-        // 
+
+        // swiper loop 滑动锁
         if (this.$op._swiper && this.$op.swiper.loop) {
             if (this.loopLock()) return
         }
@@ -65,12 +78,20 @@ const _Event = function (CScroll) {
         this._this.vx = this._this.mx - this._this.dx
         this._this.vy = this._this.my - this._this.dy
         this._this.vt = this._this.mt - this._this.dt
-        //
+
+        // 方向滑动判定
         if (this.$op.direction && !this._this.direction) {
             this.direction()
             return
         }
+        if (this.$op.direction && this._this.direction === this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
 
+        /**
+         * touchesMove 
+         * 执行阶段
+         */
+
+        // scroll滑动
         if (!this.$op._swiper) {
             if (this.$op.scrollX) {
                 // 判断是否超出内容区
@@ -93,15 +114,15 @@ const _Event = function (CScroll) {
             }
         }
 
-        if(!this.$op.scrollX && this.$op.sideLock) {
-            if(this.$pos.y >= this.$op.sideLock[0] && this.$op.sideLock[0]) {
+        if (!this.$op.scrollX && this.$op.sideLock) {
+            if (this.$pos.y >= this.$op.sideLock[0] && this.$op.sideLock[0]) {
                 this.$pos.y = this.$op.sideLock[0]
                 this._setPos()
-                return 
-            }else if(this.$pos.y <= -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1]) && this.$op.sideLock[1]){
+                return
+            } else if (this.$pos.y <= -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1]) && this.$op.sideLock[1]) {
                 this.$pos.y = -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1])
                 this._setPos()
-                return 
+                return
             }
         }
         this.setPos()
@@ -121,7 +142,7 @@ const _Event = function (CScroll) {
             this.changeNum()
         }
 
-        
+
         this.startInertia()
         this.setEase()
         this.$event.onTouchEnd()

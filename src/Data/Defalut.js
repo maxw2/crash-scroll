@@ -1,6 +1,6 @@
 const _Defalut = function (CScroll) {
     CScroll.prototype.defalut = function () {
-        this.obj = {
+        this.defalut_option = {
             scrollX: false,                 // X轴滑动
             scrollBar: false,               // 显示滚动条
             inertia: true,                  // 惯性滑动
@@ -67,7 +67,8 @@ const _Defalut = function (CScroll) {
             num: 0,                         //swiper 当前元素指针
             loopLock: false,                //无缝滑动锁       
             pullDown: false,
-            pullUp: false
+            pullUp: false,
+            direction: false,               // 是否执行过direction函数 并且显示direction方向
         }
 
         // 函数绑定数据

@@ -1,5 +1,5 @@
 import _Defalut from './Defalut.js'
-
+ 
 const _Data = function (CScroll) {
     _Defalut(CScroll)
 
@@ -8,7 +8,7 @@ const _Data = function (CScroll) {
      */
     CScroll.prototype.initData = function () {
         this.defalut()
-        this.$op = this.extend(this.obj, this.op)
+        this.$op = this.extend(this.defalut_option, this.op)
         this.initDom()
     }
 
