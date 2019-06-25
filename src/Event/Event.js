@@ -35,7 +35,7 @@ const _Event = function (CScroll) {
         ev.preventDefault()
 
         window.cancelAnimationFrame(this.$event.time)
-        if (!this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
+        // if (!this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
 
         this.initiaDirection()
 
@@ -60,7 +60,6 @@ const _Event = function (CScroll) {
          * touchesMove
          * 处理数据
          */
-
         ev.preventDefault()
         // 当前停止还是上层事件停止
         if (this.$op.skipCurrent) return
@@ -71,10 +70,10 @@ const _Event = function (CScroll) {
             if (this.loopLock()) return
         }
 
+        // 移动数据
         this._this.mt = ev.timeStamp
         this._this.mx = ev.touches[0].clientX
         this._this.my = ev.touches[0].clientY
-
         this._this.vx = this._this.mx - this._this.dx
         this._this.vy = this._this.my - this._this.dy
         this._this.vt = this._this.mt - this._this.dt
@@ -84,8 +83,13 @@ const _Event = function (CScroll) {
             this.direction()
             return
         }
-        if (this.$op.direction && this._this.direction === this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
-
+        // 如果子元素
+        if (this.$op.direction && this._this.direction === this.$op.direction){
+            window.cancelAnimationFrame(this.$event.timer)
+        }else if(!this.$op.direction ){
+            window.cancelAnimationFrame(this.$event.timer)
+        }
+        
         /**
          * touchesMove 
          * 执行阶段

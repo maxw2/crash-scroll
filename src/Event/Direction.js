@@ -9,7 +9,7 @@ const _Direction = function (CScroll) {
         let vx = this._this.vx
         let vy = this._this.vy
         if (direction === 'X' || direction === 'x') {
-            if (Math.abs(this._this.vx) > 5) {
+            if (Math.abs(this._this.vx) > 2) {
                 if (Math.abs(vx) > Math.abs(vy)) {
                     this.$op.stopPropagation = true
                     this.$op.skipCurrent = false
@@ -20,7 +20,7 @@ const _Direction = function (CScroll) {
                     this._this.direction = false
                 }
             } else if (direction === 'Y' || direction === 'y') {
-                if (Math.abs(this._this.vx) > 5) {
+                if (Math.abs(this._this.vx) > 2) {
                     if (Math.abs(vy) > Math.abs(vx)) {
                         this.$op.stopPropagation = false
                         this.$op.skipCurrent = true
