@@ -307,7 +307,7 @@ const _Inertia = function (CScroll) {
 const _SetEase = function (CScroll) {
     
     CScroll.prototype.setEase = function () {
-        let time = 0.3;
+        let time = 0.2;
         if (this.cancelEase()) {
             if (this.$op._swiper && this.$op.swiper.loop) {
                 this.loopJump();
