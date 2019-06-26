@@ -310,7 +310,7 @@ var CScroll = (function () {
     const _SetEase = function (CScroll) {
         
         CScroll.prototype.setEase = function () {
-            let time = 0.2;
+            let time = 0.3;
             if (this.cancelEase()) {
                 if (this.$op._swiper && this.$op.swiper.loop) {
                     this.loopJump();
