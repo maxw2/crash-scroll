@@ -17,7 +17,10 @@ const _Swiper = function (CScroll) {
         swiper.el_last = swiper.el_childs[swiper.len - 1]
         that.$dom.el_content.style.width = 100 * swiper.len + '%'
         that.$dom.content_w = that.$dom.el_content.clientWidth
+        //loop 循环
+        // if(swiper.loop) that._this.num = 1
 
+        //
         function eleChildNodes(node) {
             let arr = []
             for (let i = 0; i < node.length; i++) {
@@ -64,19 +67,21 @@ const _Swiper = function (CScroll) {
             let a = Math.abs(this.$pos.x / this.$dom.el_w)
             let b = a - Math.floor(a)
             // 取消调用组建
-            if (!this.$op.swiper.loop) {
-                if (_this.num === 0) {
-                    if (_this.vx > 0) return
-                }
-                if (_this.num === this.$dom.swiper.len - 1) {
-                    if (_this.vx < 0) return
-                }
-            }
+            // if (!this.$op.swiper.loop) {
+            //     if (_this.num === 0) {
+            //         if (_this.vx > 0) return
+            //     }
+            //     if (_this.num === this.$dom.swiper.len - 1) {
+            //         if (_this.vx < 0) return
+            //     }
+            // }
+
+            // 判断图片的左右滑动 如果判断thr
             // 如果向左滑动
             if (_this.vx > 0) {
                 if (b > thr) {
                     _this.num = Math.ceil(a)
-                    
+
                 } else if (b <= thr) {
                     _this.num = Math.floor(a)
                 }
@@ -89,14 +94,20 @@ const _Swiper = function (CScroll) {
                 }
             }
         }
-        this.$pos.num = _this.num
+        //
+        //
+        if (this.$op.swiper.loop) {
+            this.$pos.num = this._this.num - 1
+        } else if (!this.$op.swiper.loop) {
+            this.$pos.num = this._this.num
+            this.$event.onSwiper()
+        }
         this.changeSide()
     }
     /**
      * @method 通过切换左右边距以切换图片
      */
     CScroll.prototype.changeSide = function () {
-        this.$pos.num = this._this.num
         let num = this._this.num
         this.$dom.scroll_L = -this.$dom.el_w * num
         this.$dom.scroll_R = -this.$dom.scroll_L
@@ -116,6 +127,7 @@ const _Swiper = function (CScroll) {
             this.$pos.x = -x
             this._this.num = this.$dom.swiper.len - 1
             this._this.loopLock = false
+            this.$pos.num = this._this.num
             // 最后一个页面
             // 跳转至第二个
         } else if (this.$pos.x === -lX || this._this.num === this.$dom.swiper.len + 1) {
@@ -123,7 +135,10 @@ const _Swiper = function (CScroll) {
             this.$pos.x = -x
             this._this.num = 0
             this._this.loopLock = false
+            this.$pos.num = this._this.num
         }
+        // this.$pos.num = this._this.num
+        if (this.$op.swiper.loop) this.$event.onSwiper()
         this.setPos()
     }
     /**
@@ -136,7 +151,7 @@ const _Swiper = function (CScroll) {
             let lX = 0
             let rX = this.$dom.content_w + this.$dom.el_w
 
-            if (this.$pos.x > -lX ) {
+            if (this.$pos.x > -lX) {
                 this._this.loopLock = true
             } else if (this.$pos.x < -rX) {
                 this._this.loopLock = true
@@ -145,7 +160,7 @@ const _Swiper = function (CScroll) {
             }
             return this._this.loopLock
         }
-        
+
     }
 
 

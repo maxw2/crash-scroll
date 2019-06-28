@@ -7,16 +7,19 @@ const _CustomizeEvent = function (CScroll) {
     CScroll.prototype.on = function (type, func) {
         switch (type) {
             case 'onTouchStart':
-                this.$event.onTouchStart = touchStartFunArr(func, this)
+                this.$event.onTouchStart = ontouchStart(func, this)
                 break;
             case 'onTouchMove':
-                this.$event.onTouchMove = addTouchMoveFun(func, this)
+                this.$event.onTouchMove = onTouchMove(func, this)
                 break;
             case 'onTouchEnd':
-                this.$event.onTouchEnd = touchEndFunArr(func, this)
+                this.$event.onTouchEnd = onTouchEnd(func, this)
                 break;
             case 'onScroll':
-                this.$event.onScroll = addScroll(func, this)
+                this.$event.onScroll = onScroll(func, this)
+                break;
+            case 'onSwiper':
+                this.$event.onSwiper = onSwiper(func, this)
                 break;
             default:
                 console.log('输入有效事件')
@@ -29,43 +32,61 @@ const _CustomizeEvent = function (CScroll) {
      * @param {Function} func 回调函数
      */
     CScroll.prototype.removeOn = function (type, func) {
-        switch (type){
+        let funcArr = null
+        switch (type) {
             case 'onTouchStart':
+                funcArr = this.$event.touchStartFunArr
                 break;
             case 'onTouchMove':
+                funcArr = this.$event.touchMoveFunArr
                 break;
             case 'onTouchEnd':
-                this.$event.touchEndFunArr
+                funcArr = this.$event.touchEndFunArr
+                break;
+            case 'onScroll':
+                funcArr = this.$event.scrollFunArr
+                break;
+            case 'onSwiper':
+                funcArr = this.$event.scrollFunArr
+                break;
+            default:
+                console.log('输入的事件类型有误')
+                return
         }
-        let typeEvent = this.$event[type]
-        if(typeEvent){
-            console.log(typeEvent)
-            typeEvent.map((val,index)=>{
-                if(func === val){
-                    typeEvent.splice(index,1)
-                }else{
-                    console.log('removeOn:未找到对应函数')
-                }
-            })
+        for (let i = 0; i < funcArr.length; i++) {
+            if (funcArr[i] === func) {
+                let fn = funcArr.splice(i, 1)
+                console.log(fn)
+            }
         }
     }
-    // CScroll.prototype.checkEvent = function (type) {
-    //     switch (type) {
-    //         case 'onTouchStart':
-    //             return touchStartFun
-    //         case 'onTouchMove':
-    //             return touchMoveFun
-    //         case 'onTouchEnd':
-    //             return touchEndFun
-    //         case 'onScroll':
-    //             return scrollFun
-    //         default:
-    //             console.log('输入Type')
-    //             break
-    //     }
-    // }
+    /**
+     * @method 检查事件代理的函数
+     * @param {String} type 事件类型
+     */
+    CScroll.prototype.checkEvent = function (type) {
+        let fn = null
+        switch (type) {
+            case 'onTouchStart':
+                fn = this.$event.touchStartFunArr
+                break;
+            case 'onTouchMove':
+                fn = this.$event.touchMoveFunArr
+                break;
+            case 'onTouchEnd':
+                fn = this.$event.touchEndFunArr
+                break;
+            case 'onScroll':
+                fn = this.$event.scrollFunArr
+                break;
+            default:
+                console.log('输入的事件类型有误')
+                return
+        }
+        return fn
+    }
 
-    function touchStartFunArr(func, that) {
+    function ontouchStart(func, that) {
         that.$event.touchEndFunArr.push(func)
         let funcArr = that.$event.touchEndFunArr
         return () => {
@@ -74,7 +95,7 @@ const _CustomizeEvent = function (CScroll) {
             })
         }
     }
-    function addTouchMoveFun(func, that) {
+    function onTouchMove(func, that) {
         that.$event.touchMoveFunArr.push(func)
         let funcArr = that.$event.touchMoveFunArr
         return () => {
@@ -83,18 +104,27 @@ const _CustomizeEvent = function (CScroll) {
             })
         }
     }
-    function touchEndFunArr(func, that) {
+    function onTouchEnd(func, that) {
         that.$event.touchEndFunArr.push(func)
         let funcArr = that.$event.touchEndFunArr
         return () => {
             funcArr.forEach(fn => {
-                fn.call(that.$pos, that.el,that)
+                fn(that.$pos, that.el)
             })
         }
     }
-    function addScroll(func, that) {
+    function onScroll(func, that) {
         that.$event.scrollFunArr.push(func)
         let funcArr = that.$event.scrollFunArr
+        return () => {
+            funcArr.forEach(fn => {
+                fn(that.$pos, that.el)
+            })
+        }
+    }
+    function onSwiper(func, that) {
+        that.$event.swiperFunArr.push(func)
+        let funcArr = that.$event.swiperFunArr
         return () => {
             funcArr.forEach(fn => {
                 fn(that.$pos, that.el)

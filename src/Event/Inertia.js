@@ -4,8 +4,13 @@ const _Inertia = function (CScroll) {
         //option 设置
         if (!this.$op.inertia) return
         //  双重判断是否开启惯性滑动
-        let time = this._this.ut - this._this.mt
-        time < 40 ? this._this.ine = true : this._this.ine = false
+        if (this._this.vt < 40 && Math.abs(this._this.vy) > 1 && !this.$op.scrollX) {
+            this._this.ine = true
+        } else if (this._this.vt < 40 && !this.$op.scrollX && Math.abs(this._this.vx) > 1) {
+            this._this.ine = true
+        }else{
+            this._this.ine = false
+        }
         // 超出区域禁止惯性滑动
         if (this.outSide()) this._this.ine = false
 
@@ -28,9 +33,15 @@ const _Inertia = function (CScroll) {
         if (!this.$op.inertia) return
         let a = null
         // 如果friction惯性值小于1 退出函数
-        if (Math.abs(this._this.friction) < 1) {
+        if (Math.abs(this._this.friction) < 1 ) {
+            if(this.$op.sideLock[0] && this.$pos.y >= this.$op.sideLock[0]){
+                window.cancelAnimationFrame(this.$event.time)
+                this.$pos.y = this.$op.sideLock[0]
+                this.setPos()
+                return 
+            }
             window.cancelAnimationFrame(this.$event.time)
-            this.setEase()
+            // this.setEase()
             return
         }
         //判断是否超出内容区

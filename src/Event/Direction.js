@@ -1,4 +1,4 @@
- 
+
 const _Direction = function (CScroll) {
     /**
      * @method 判断方向
@@ -19,21 +19,22 @@ const _Direction = function (CScroll) {
                     this.$op.skipCurrent = true
                     this._this.direction = false
                 }
-            } else if (direction === 'Y' || direction === 'y') {
-                if (Math.abs(this._this.vx) > 2) {
-                    if (Math.abs(vy) > Math.abs(vx)) {
-                        this.$op.stopPropagation = false
-                        this.$op.skipCurrent = true
-                        this._this.direction = 'y'
-                    } else {
-                        this.$op.stopPropagation = true
-                        this.$op.skipCurrent = false
-                        this._this.direction = false
-                    }
-
+            }
+        } else if (direction === 'Y' || direction === 'y') {
+            if (Math.abs(this._this.vy) > 2) {
+                if (Math.abs(vy) > Math.abs(vx)) {
+                    this.$op.stopPropagation = true
+                    this.$op.skipCurrent = false
+                    this._this.direction = 'y'
+                } else {
+                    this.$op.stopPropagation = false
+                    this.$op.skipCurrent = true
+                    this._this.direction = false
                 }
+
             }
         }
+
     }
     /**
      * @method 初始化私有数值

@@ -1,6 +1,7 @@
 const _SetEase = function (CScroll) {
     
     CScroll.prototype.setEase = function () {
+        let time = 0.2
         if (this.cancelEase()) {
             if (this.$op._swiper && this.$op.swiper.loop) {
                 this.loopJump()
@@ -12,15 +13,15 @@ const _SetEase = function (CScroll) {
             //Left
             if (this.outSide('left')) {
                 let a = this.$pos.x - this.$dom.scroll_L
-                this.$pos.x -= a * 0.1
+                this.$pos.x -= a * time
                 if (this.$pos.x - this.$dom.scroll_L < 1) this.$pos.x = this.$dom.scroll_L
                 this.setPos(this.$pos.x)
                 this.$event.timer = window.requestAnimationFrame(this.setEase.bind(this))
             }
-            // Right
+            // Right  
             if (this.outSide('right')) {
                 let a = this.$pos.x + this.$dom.scroll_R
-                this.$pos.x -= a * 0.1
+                this.$pos.x -= a * time
                 if (Math.abs(this.$pos.x) - this.$dom.scroll_R < 1) this.$pos.x = -this.$dom.scroll_R
                 this.setPos(this.$pos.x)
                 this.$event.timer = window.requestAnimationFrame(this.setEase.bind(this))
@@ -29,7 +30,7 @@ const _SetEase = function (CScroll) {
             //Top
             if (this.outSide('top')) {
                 let a = this.$pos.y - this.$dom.scroll_T // 回弹距离
-                this.$pos.y -= a * 0.1
+                this.$pos.y -= a * time
                 if (Math.abs(this.$pos.y) - this.$dom.scroll_T < 1) this.$pos.y = this.$dom.scroll_T // 校准定位 
                 this.setPos(this.$pos.y)
                 this.$event.timer = window.requestAnimationFrame(this.setEase.bind(this))
@@ -37,7 +38,7 @@ const _SetEase = function (CScroll) {
             //Bottom
             if (this.outSide('bottom')) {
                 let a = this.$pos.y + this.$dom.scroll_B  // 回弹距离
-                this.$pos.y -= a * 0.1
+                this.$pos.y -= a * time
                 if (Math.abs(this.$pos.y) - this.$dom.scroll_B < 1) this.$pos.y = -this.$dom.scroll_B // 校准定位
                 this.setPos(this.$pos.y)
                 this.$event.timer = window.requestAnimationFrame(this.setEase.bind(this))

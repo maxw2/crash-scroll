@@ -58,7 +58,6 @@ const _Defalut = function (CScroll) {
             mt: null,
             mx: null,
             my: null,
-            ut: null,
             vx: null,                       //mx - dx
             vy: null,                       //my - dy
             vt: null,                       //mt - dt
@@ -77,10 +76,12 @@ const _Defalut = function (CScroll) {
             start: null,                    //  绑定EventTouchStart 
             move: null,                     //  绑定EventTouchMove
             end: null,                      //  绑定EventTouchEnd
+            onSwiper: new Function,         //  swiper事件          
             onScroll: new Function,         //  scroll事件
             onTouchStart: new Function,     //  touchDown事件
             onTouchMove: new Function,      //  touchMove事件
             onTouchEnd: new Function,       //  touchUp事件
+            swiperFunArr:[],                //  swiper事件数组
             scrollFunArr: [],               //  scroll事件数组
             touchStartFunArr: [],           //  touchstart事件数组
             touchMoveFunArr: [],            //  touchmove事件数组

@@ -32,12 +32,16 @@ const _Event = function (CScroll) {
 
     // TouchStart
     CScroll.prototype.EventTouchStart = function (ev) {
-        ev.preventDefault()
-
+        // ev.preventDefault()
         window.cancelAnimationFrame(this.$event.time)
         // if (!this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
-
         this.initiaDirection()
+        /**
+         * 
+         */
+        this._this.vx = null,
+        this._this.vy = null,
+        this._this.vt = null
 
         /**
          * 
@@ -50,7 +54,7 @@ const _Event = function (CScroll) {
          * 
          */
         if (this.$op.direction) this.$op.stopPropagation = true
-
+       
         this.$event.onTouchStart()
     }
 
@@ -77,7 +81,7 @@ const _Event = function (CScroll) {
         this._this.vx = this._this.mx - this._this.dx
         this._this.vy = this._this.my - this._this.dy
         this._this.vt = this._this.mt - this._this.dt
-
+ 
         // 方向滑动判定
         if (this.$op.direction && !this._this.direction) {
             this.direction()
@@ -105,9 +109,12 @@ const _Event = function (CScroll) {
                 this.outSide()
                     ? this.$pos.y += this._this.vy * 0.2 : this.$pos.y += this._this.vy
             }
+        // swiper滑动
         } else if (this.$op._swiper) {
-            // 自己理解
+            // swiper不为循环滑动
+            
             if (this._this.num === 0 && !this.$op.swiper.loop) {
+                 
                 this._this.vx > 0 ?
                     this.$pos.x += this._this.vx * 0.2 : this.$pos.x += this._this.vx
             } else if (this._this.num === this.$dom.swiper.len - 1 && !this.$op.swiper.loop) {
@@ -149,7 +156,9 @@ const _Event = function (CScroll) {
 
         this.startInertia()
         this.setEase()
+        
         this.$event.onTouchEnd()
+
     }
 
 
