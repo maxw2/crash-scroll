@@ -44,8 +44,9 @@
         let banner = new CScroll(document.querySelector('.banner'), {
             scrollX: true,
             direction: 'x',
+            sideLock:[null,null,null,50],
             swiper: {
-                loop: false
+                loop: false 
             }
         })
         banner.on('onSwiper',(ev)=>{
@@ -58,6 +59,7 @@
         let scroll = new CScroll(document.querySelector('.container'), {
             scrollX: false,
             direction:'y',
+            sideLock:[50,null,null,null],
             scrollBar: true
         })
         

@@ -34,16 +34,19 @@ const _Inertia = function (CScroll) {
         let a = null
         // 如果friction惯性值小于1 退出函数
         if (Math.abs(this._this.friction) < 1 ) {
-            if(this.$op.sideLock[0] && this.$pos.y >= this.$op.sideLock[0]){
-                window.cancelAnimationFrame(this.$event.time)
-                this.$pos.y = this.$op.sideLock[0]
-                this.setPos()
-                return 
-            }
             window.cancelAnimationFrame(this.$event.time)
-            // this.setEase()
+            this.setEase()
             return
         }
+        // 如果设置了区域锁 判断
+        if(this.sideLock()){
+            window.cancelAnimationFrame(this.$event.time)
+            this.setEase()
+            return
+        }
+
+
+
         //判断是否超出内容区
         if (this.outSide()) {
             this._this.friction -= this._this.friction * 0.2

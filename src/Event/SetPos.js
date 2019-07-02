@@ -70,7 +70,41 @@ const _SetPos = function (CScroll) {
 
         return a
     }
-    
+
+    /**
+     * @method 判断是否执行区域锁  // 会修改全局数据 不好
+     * @return {Boolean}
+     */
+    CScroll.prototype.sideLock = function () {
+        let top = this.$op.sideLock[0]
+        let right = this.$op.sideLock[1]
+        let bottom = this.$op.sideLock[2]
+        let left = this.$op.sideLock[3]
+
+        if(this.$op.scrollX){
+            if(this.$pos.x >= left && left){
+                this.$pos.x = left
+                return true
+            }else if(this.$pos.x <= right && right){
+                this.$pos.x = right
+                return true
+            }
+        }else if(!this.$op.scrollX) {
+            if(this.$pos.y >= top && top){
+                this.$pos.y = top
+                return true
+            }else if(this.$pos.y <= bottom && bottom){
+                this.$pos.y = bottom
+                return true
+            }
+        }
+
+        return false
+
+    }
+
+
+
 }
 
 export default _SetPos

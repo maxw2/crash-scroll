@@ -1,8 +1,8 @@
 {
   "name": "crash-scroll",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "基生JS编写的移动端Scroll组件",
-  "main": "build/es_Cscrill.js",
+  "main": "build/es_CScrill.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "rollup --watch --config rollup.config.js"

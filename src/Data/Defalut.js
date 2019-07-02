@@ -10,13 +10,13 @@ const _Defalut = function (CScroll) {
             direction: false,               // 滑动方向
             // 待调试
             scrollType: 0,                  // scroll开启 0.不开启 1.防抖 2.节流 3.正常
-            sideLock: null,                  // 锁定边界 [top,left]  
+            sideLock: [null,null,null,null],                  // 锁定边界 [top,right,bottom,left]
             // Swipe
             _swiper: false,
             swiper: {                       // 开启Swipe
                 btn: false,                 // 分页按键
                 loop: false,                // 无缝滑动
-                autoPlay: false,            // 自动播放
+                autoPlay: false,            // 自动播放;
                 threshold: 0.5              // 是否滚动到下一个元素 百分比
             }
         }

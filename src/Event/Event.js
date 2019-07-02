@@ -124,18 +124,9 @@ const _Event = function (CScroll) {
                 this.$pos.x += this._this.vx
             }
         }
+        // 区域锁 会修改$pos
+        this.sideLock()
 
-        if (!this.$op.scrollX && this.$op.sideLock) {
-            if (this.$pos.y >= this.$op.sideLock[0] && this.$op.sideLock[0]) {
-                this.$pos.y = this.$op.sideLock[0]
-                this._setPos()
-                return
-            } else if (this.$pos.y <= -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1]) && this.$op.sideLock[1]) {
-                this.$pos.y = -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1])
-                this._setPos()
-                return
-            }
-        }
         this.setPos()
         this.$event.onTouchMove()
 

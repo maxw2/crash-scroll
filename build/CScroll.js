@@ -13,13 +13,13 @@ var CScroll = (function () {
                 direction: false,               // 滑动方向
                 // 待调试
                 scrollType: 0,                  // scroll开启 0.不开启 1.防抖 2.节流 3.正常
-                sideLock: null,                  // 锁定边界 [top,left]  
+                sideLock: [null,null,null,null],                  // 锁定边界 [top,right,bottom,left]
                 // Swipe
                 _swiper: false,
                 swiper: {                       // 开启Swipe
                     btn: false,                 // 分页按键
                     loop: false,                // 无缝滑动
-                    autoPlay: false,            // 自动播放
+                    autoPlay: false,            // 自动播放;
                     threshold: 0.5              // 是否滚动到下一个元素 百分比
                 }
             };
@@ -250,7 +250,41 @@ var CScroll = (function () {
 
             return a
         };
-        
+
+        /**
+         * @method 判断是否执行区域锁  // 会修改全局数据 不好
+         * @return {Boolean}
+         */
+        CScroll.prototype.sideLock = function () {
+            let top = this.$op.sideLock[0];
+            let right = this.$op.sideLock[1];
+            let bottom = this.$op.sideLock[2];
+            let left = this.$op.sideLock[3];
+
+            if(this.$op.scrollX){
+                if(this.$pos.x >= left && left){
+                    this.$pos.x = left;
+                    return true
+                }else if(this.$pos.x <= right && right){
+                    this.$pos.x = right;
+                    return true
+                }
+            }else if(!this.$op.scrollX) {
+                if(this.$pos.y >= top && top){
+                    this.$pos.y = top;
+                    return true
+                }else if(this.$pos.y <= bottom && bottom){
+                    this.$pos.y = bottom;
+                    return true
+                }
+            }
+
+            return false
+
+        };
+
+
+
     };
 
     const _Inertia = function (CScroll) {
@@ -289,16 +323,19 @@ var CScroll = (function () {
             let a = null;
             // 如果friction惯性值小于1 退出函数
             if (Math.abs(this._this.friction) < 1 ) {
-                if(this.$op.sideLock[0] && this.$pos.y >= this.$op.sideLock[0]){
-                    window.cancelAnimationFrame(this.$event.time);
-                    this.$pos.y = this.$op.sideLock[0];
-                    this.setPos();
-                    return 
-                }
                 window.cancelAnimationFrame(this.$event.time);
-                // this.setEase()
+                this.setEase();
                 return
             }
+            // 如果设置了区域锁 判断
+            if(this.sideLock()){
+                window.cancelAnimationFrame(this.$event.time);
+                this.setEase();
+                return
+            }
+
+
+
             //判断是否超出内容区
             if (this.outSide()) {
                 this._this.friction -= this._this.friction * 0.2;
@@ -687,18 +724,9 @@ var CScroll = (function () {
                     this.$pos.x += this._this.vx;
                 }
             }
+            // 区域锁 会修改$pos
+            this.sideLock();
 
-            if (!this.$op.scrollX && this.$op.sideLock) {
-                if (this.$pos.y >= this.$op.sideLock[0] && this.$op.sideLock[0]) {
-                    this.$pos.y = this.$op.sideLock[0];
-                    this._setPos();
-                    return
-                } else if (this.$pos.y <= -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1]) && this.$op.sideLock[1]) {
-                    this.$pos.y = -(this.$dom.content_h - this.$dom.el_h + this.$op.sideLock[1]);
-                    this._setPos();
-                    return
-                }
-            }
             this.setPos();
             this.$event.onTouchMove();
 
@@ -837,15 +865,6 @@ var CScroll = (function () {
             if (this.$op.scrollX) {
                 let a = Math.abs(this.$pos.x / this.$dom.el_w);
                 let b = a - Math.floor(a);
-                // 取消调用组建
-                // if (!this.$op.swiper.loop) {
-                //     if (_this.num === 0) {
-                //         if (_this.vx > 0) return
-                //     }
-                //     if (_this.num === this.$dom.swiper.len - 1) {
-                //         if (_this.vx < 0) return
-                //     }
-                // }
 
                 // 判断图片的左右滑动 如果判断thr
                 // 如果向左滑动

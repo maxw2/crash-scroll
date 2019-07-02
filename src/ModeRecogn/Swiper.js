@@ -66,15 +66,6 @@ const _Swiper = function (CScroll) {
         if (this.$op.scrollX) {
             let a = Math.abs(this.$pos.x / this.$dom.el_w)
             let b = a - Math.floor(a)
-            // 取消调用组建
-            // if (!this.$op.swiper.loop) {
-            //     if (_this.num === 0) {
-            //         if (_this.vx > 0) return
-            //     }
-            //     if (_this.num === this.$dom.swiper.len - 1) {
-            //         if (_this.vx < 0) return
-            //     }
-            // }
 
             // 判断图片的左右滑动 如果判断thr
             // 如果向左滑动
