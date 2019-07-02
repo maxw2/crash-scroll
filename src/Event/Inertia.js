@@ -6,7 +6,7 @@ const _Inertia = function (CScroll) {
         //  双重判断是否开启惯性滑动
         if (this._this.vt < 40 && Math.abs(this._this.vy) > 1 && !this.$op.scrollX) {
             this._this.ine = true
-        } else if (this._this.vt < 40 && !this.$op.scrollX && Math.abs(this._this.vx) > 1) {
+        } else if (this._this.vt < 40 && this.$op.scrollX && Math.abs(this._this.vx) > 1) {
             this._this.ine = true
         }else{
             this._this.ine = false

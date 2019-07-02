@@ -184,7 +184,7 @@ var CScroll = (function () {
 
             let content = this.$dom.el_content;
             let bar = this.$dom.el_bar;
-            
+
             if (this.$op.scrollX) {
                 content.style.transform = 'translateX(' + this.$pos.x + 'px) translateZ(0px)';
             } else {
@@ -252,7 +252,7 @@ var CScroll = (function () {
         };
 
         /**
-         * @method 判断是否执行区域锁  // 会修改全局数据 不好
+         * @method 判断是否执行区域锁  // 会修改全局数据
          * @return {Boolean}
          */
         CScroll.prototype.sideLock = function () {
@@ -261,25 +261,73 @@ var CScroll = (function () {
             let bottom = this.$op.sideLock[2];
             let left = this.$op.sideLock[3];
 
-            if(this.$op.scrollX){
-                if(this.$pos.x >= left && left){
+            if (this.$op.scrollX) {
+                if (this.$pos.x >= left && left) {
                     this.$pos.x = left;
                     return true
-                }else if(this.$pos.x <= right && right){
+                } else if (this.$pos.x <= right && right) {
                     this.$pos.x = right;
                     return true
                 }
-            }else if(!this.$op.scrollX) {
-                if(this.$pos.y >= top && top){
+            } else if (!this.$op.scrollX) {
+                if (this.$pos.y >= top && top) {
                     this.$pos.y = top;
                     return true
-                }else if(this.$pos.y <= bottom && bottom){
+                } else if (this.$pos.y <= bottom && bottom) {
                     this.$pos.y = bottom;
                     return true
                 }
             }
 
             return false
+
+        };
+
+        /** 
+         * 需要重写
+         * @method  scroll跳转
+         * @param   {Number}    to    // 跳转的坐标
+         * @param   {Number}    time  // 时间
+         */
+        CScroll.prototype.scrollTo = function (to, time) {
+            let posTo = to;
+            let distance = null;
+            let timeNum = time || 0.01;
+     
+            if (this.$op.scrollX) {
+                distance = posTo - this.$pos.x;
+            } else if (!this.$op.scrollX) {
+                distance = posTo - this.$pos.y;
+            }
+
+
+            scrollToPos.call(this, distance, to);
+
+
+            function scrollToPos(distance, to) {
+                let _time = null;
+                let posTo = to;
+                
+                if (this.$op.scrollX && Math.abs(this.$pos.x) === Math.abs(posTo)) {
+                    window.cancelAnimationFrame(_time);
+                    return
+                } else if (!this.$op.scrollX && Math.abs(this.$pos.y) === Math.abs(posTo)) {
+                    window.cancelAnimationFrame(_time);
+                    return
+                }
+
+
+                if (this.$op.scrollX) {
+                    this.$pos.x += distance * timeNum;
+                } else if (!this.$op.scrollX) {
+                    this.$pos.y += distance * timeNum;
+                }
+                this._setPos();
+                _time = window.requestAnimationFrame(scrollToPos.bind(this, distance, to));
+            }
+
+
+
 
         };
 
@@ -295,7 +343,7 @@ var CScroll = (function () {
             //  双重判断是否开启惯性滑动
             if (this._this.vt < 40 && Math.abs(this._this.vy) > 1 && !this.$op.scrollX) {
                 this._this.ine = true;
-            } else if (this._this.vt < 40 && !this.$op.scrollX && Math.abs(this._this.vx) > 1) {
+            } else if (this._this.vt < 40 && this.$op.scrollX && Math.abs(this._this.vx) > 1) {
                 this._this.ine = true;
             }else{
                 this._this.ine = false;
