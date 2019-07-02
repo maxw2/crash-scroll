@@ -87,24 +87,28 @@ const _Swiper = function (CScroll) {
         }
         //
         //
-        if (this.$op.swiper.loop) {
-            this.$pos.num = this._this.num - 1
-        } else if (!this.$op.swiper.loop) {
-            this.$pos.num = this._this.num
-            this.$event.onSwiper()
-        }
+        
         this.changeSide()
     }
     /**
      * @method 通过切换左右边距以切换图片
      */
     CScroll.prototype.changeSide = function () {
+        if (this.$op.swiper.loop) {
+            this.$pos.num = this._this.num - 1
+        } else if (!this.$op.swiper.loop) {
+            this.$pos.num = this._this.num
+            // this.$event.onSwiper()
+        }
+
+        if(!this.$op.swiper.loop) this.$event.onSwiper()
+        
         let num = this._this.num
         this.$dom.scroll_L = -this.$dom.el_w * num
         this.$dom.scroll_R = -this.$dom.scroll_L
     }
     /**
-     * @method 开启循环模式，跳转页面
+     * @method 开启循环模式，跳转页面 
      */
     CScroll.prototype.loopJump = function () {
         // 由于左右间距被修改过
@@ -128,8 +132,9 @@ const _Swiper = function (CScroll) {
             this._this.loopLock = false
             this.$pos.num = this._this.num
         }
-        // this.$pos.num = this._this.num
-        if (this.$op.swiper.loop) this.$event.onSwiper()
+        
+        this.$event.onSwiper()
+
         this.setPos()
     }
     /**
@@ -153,6 +158,31 @@ const _Swiper = function (CScroll) {
         }
 
     }
+    /**
+     * @method 轮播图跳转
+     */
+    CScroll.prototype.swiperTo = function(num,time){
+        let _num = num
+        this._this.num = _num
+        
+        // loop 
+        if(this.$op.swiper.loop){
+            this._this.num = _num + 1
+            
+
+        // not loop
+        }else if(!this.$op.swiper.loop){
+            this._this.num = _num
+        }
+
+        //
+        this.changeSide()
+        this.setEase()
+
+
+    }
+
+
 
 
 }

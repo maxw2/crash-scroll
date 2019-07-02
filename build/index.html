@@ -70,18 +70,24 @@
             direction: 'x',
             sideLock:[null,null,null,50],
             swiper: {
-                loop: false 
+                loop: true
             }
         })
         banner.on('onSwiper',(ev)=>{
             console.log(ev.num)
         })
 
+        setTimeout(()=>{
+           banner.swiperTo(3)
+        },2000)
+        
+
+
         let listLeft = new CScroll(document.querySelector('.list-left'),{
             scrollX:true,
             inertia:true,
         })
-        listLeft.scrollTo(-400,0.001)
+        
 
 
 
