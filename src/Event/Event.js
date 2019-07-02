@@ -87,6 +87,7 @@ const _Event = function (CScroll) {
             this.direction()
             return
         }
+
         // 如果子元素
         if (this.$op.direction && this._this.direction === this.$op.direction){
             window.cancelAnimationFrame(this.$event.timer)
@@ -109,23 +110,30 @@ const _Event = function (CScroll) {
                 this.outSide()
                     ? this.$pos.y += this._this.vy * 0.2 : this.$pos.y += this._this.vy
             }
+
+
         // swiper滑动
         } else if (this.$op._swiper) {
             // swiper不为循环滑动
-            
             if (this._this.num === 0 && !this.$op.swiper.loop) {
-                 
-                this._this.vx > 0 ?
+                // 
+                this._this.vx > 0 && this.$pos.x >= -this.$dom.scroll_L ?
                     this.$pos.x += this._this.vx * 0.2 : this.$pos.x += this._this.vx
             } else if (this._this.num === this.$dom.swiper.len - 1 && !this.$op.swiper.loop) {
-                this._this.vx < 0 ?
+                // 
+                this._this.vx < 0 && this.$pos.x <= -this.$dom.scroll_R ?
                     this.$pos.x += this._this.vx * 0.2 : this.$pos.x += this._this.vx
+
+                    // swiper 为循环滑动
             } else {
                 this.$pos.x += this._this.vx
             }
         }
+
         // 区域锁 会修改$pos
         this.sideLock()
+
+
 
         this.setPos()
         this.$event.onTouchMove()
