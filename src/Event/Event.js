@@ -33,7 +33,12 @@ const _Event = function (CScroll) {
     // TouchStart
     CScroll.prototype.EventTouchStart = function (ev) {
         // ev.preventDefault()
+        // 惯性计时器
         window.cancelAnimationFrame(this.$event.time)
+        // autoPlay
+        window.cancelAnimationFrame(this.$event.timeAuto)
+        // scrollTo
+        window.cancelAnimationFrame(this.$event.timeTo)
         // if (!this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
         this.initiaDirection()
         /**
@@ -148,6 +153,7 @@ const _Event = function (CScroll) {
         // 当前停止还是上层事件停止
         if (this.$op.skipCurrent) return
         if (this.$op.stopPropagation) ev.stopPropagation()
+
         if (this.$op._swiper) {
             this.changeNum()
         }

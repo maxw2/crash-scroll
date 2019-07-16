@@ -54,41 +54,59 @@
 
     </div>
     <script>
-        document.querySelector('.click_p').addEventListener('touchstart',()=>{
-            console.log('click')
-        })
-        
+        // scroll
         let scroll = new CScroll(document.querySelector('.container'), {
             scrollX: false,
-            direction:'y',
-            sideLock:[50,null,null,null],
+            direction: 'y',
+            sideLock: [50, null, null, null],
             scrollBar: true
         })
-        
+
+        scroll.on('onScroll', (ev) => {
+            console.log(ev.y)
+            let ct = false
+            if (ct) return
+            if (ev.y === 50) {
+                ct = true
+                scroll.$dom.scroll_T = 50
+                setTimeout(() => {
+                    scroll.$dom.scroll_T = 0
+                    scroll.setEase()
+                    console.log(1)
+                }, 1000)
+            }
+        })
+
+        scroll.on('onTouchEnd', (ev) => {
+            // console.log(ev.y)
+            // if(ev.y === 40){
+            //     console.log(1)
+            //     scroll.$pos.y = 40
+            //     scroll._setPos()
+            // }
+        })
+
+
+        // banner
         let banner = new CScroll(document.querySelector('.banner'), {
             scrollX: true,
             direction: 'x',
-            sideLock:[null,null,null,50],
+            sideLock: [null, null, null, 50],
             swiper: {
-                loop: true
+                loop: true,
             }
         })
-        banner.on('onSwiper',(ev)=>{
+        banner.on('onSwiper', (ev) => {
             console.log(ev.num)
         })
 
-        setTimeout(()=>{
-           banner.swiperTo(3)
-        },2000)
-        
-
-
-        let listLeft = new CScroll(document.querySelector('.list-left'),{
-            scrollX:true,
-            inertia:true,
+        // listLeft
+        let listLeft = new CScroll(document.querySelector('.list-left'), {
+            scrollX: true,
+            inertia: true,
         })
-        
 
+        // listLeft.scrollTo(-100,0.1)
 
 
     </script>

@@ -88,8 +88,10 @@ const _Defalut = function (CScroll) {
             touchEndFunArr: [],             //  touchend事件数组
             // onPullDown: function () {},     //pullDown事件
             // onPullUp: function () {},       //pullUp事件
-            time: null,                      //惯性计时器
-            timer: null,                     //回弹计时器
+            time: null,                      // 惯性计时器
+            timer: null,                     // 回弹计时器
+            timeAuto: null,                  // 轮播图自动播放计时器
+            timeTo:null                      // 跳转页面计时器
         };
 
     };
@@ -290,46 +292,42 @@ const _SetPos = function (CScroll) {
         let posTo = to;
         let distance = null;
         let timeNum = time || 0.01;
- 
-        if (this.$op.scrollX) {
-            distance = posTo - this.$pos.x;
-        } else if (!this.$op.scrollX) {
+
+        window.cancelAnimationFrame(this.$event.scrollTo);
+
+        this.$op.scrollX ?
+            distance = posTo - this.$pos.x :
             distance = posTo - this.$pos.y;
-        }
 
-
-        scrollToPos.call(this, distance, to);
-
-
-        function scrollToPos(distance, to) {
-            let _time = null;
-            let posTo = to;
-            
-            if (this.$op.scrollX && Math.abs(this.$pos.x) === Math.abs(posTo)) {
-                window.cancelAnimationFrame(_time);
-                return
-            } else if (!this.$op.scrollX && Math.abs(this.$pos.y) === Math.abs(posTo)) {
-                window.cancelAnimationFrame(_time);
+        // 取消移动
+        if (this.$op.scrollX) {
+            if (Math.floor(to) === Math.floor(this.$pos.x) || Math.ceil(to) === Math.ceil(this.$pos.x)) {
+                this.$pos.x = to;
+                this._setPos();
+                window.cancelAnimationFrame(this.$event.scrollTo);
                 return
             }
-
-
-            if (this.$op.scrollX) {
-                this.$pos.x += distance * timeNum;
-            } else if (!this.$op.scrollX) {
-                this.$pos.y += distance * timeNum;
+        } else {
+            if (Math.floor(to) === Math.floor(this.$pos.y) || Math.ceil(to) === Math.ceil(this.$pos.y)) {
+                this.$pos.y = to;
+                this._setPos();
+                window.cancelAnimationFrame(this.$event.scrollTo);
+                return
             }
-            this._setPos();
-            _time = window.requestAnimationFrame(scrollToPos.bind(this, distance, to));
         }
 
+        // 元素的移动
+        this.$op.scrollX ?
+            this.$pos.x += distance * timeNum :
+            this.$pos.y += distance * timeNum;
 
-
+        this._setPos();
+        
+        this.$event.timeTo = window.requestAnimationFrame(() => {
+            this.scrollTo(to, time);
+        });
 
     };
-
-
-
 };
 
 const _Inertia = function (CScroll) {
@@ -410,7 +408,7 @@ const _SetEase = function (CScroll) {
                 this.loopJump();
                 return
             }
-        }
+        } 
 
         if (this.$op.scrollX) {
             //Left
@@ -678,7 +676,12 @@ const _Event = function (CScroll) {
     // TouchStart
     CScroll.prototype.EventTouchStart = function (ev) {
         // ev.preventDefault()
+        // 惯性计时器
         window.cancelAnimationFrame(this.$event.time);
+        // autoPlay
+        window.cancelAnimationFrame(this.$event.timeAuto);
+        // scrollTo
+        window.cancelAnimationFrame(this.$event.timeTo);
         // if (!this.$op.direction) window.cancelAnimationFrame(this.$event.timer)
         this.initiaDirection();
         /**
@@ -793,6 +796,7 @@ const _Event = function (CScroll) {
         // 当前停止还是上层事件停止
         if (this.$op.skipCurrent) return
         if (this.$op.stopPropagation) ev.stopPropagation();
+
         if (this.$op._swiper) {
             this.changeNum();
         }
@@ -858,6 +862,9 @@ const _Swiper = function (CScroll) {
         createLoop(this);
         createBtn(this);
 
+        // 是否开启自动播放
+        if(this.$op.swiper.autoPlay) this.swiperAuto(this.$op.swiper.autoPlay);
+        
 
     };
 
@@ -908,6 +915,7 @@ const _Swiper = function (CScroll) {
     function createBtn(that) {
         if (!that.$op._swiper && !that.$op.swiper.btn) return
     }
+    
     /**
      * @method 切换图片数页 
      */
@@ -918,7 +926,7 @@ const _Swiper = function (CScroll) {
         if (this.$op.scrollX) {
             let a = Math.abs(this.$pos.x / this.$dom.el_w);
             let b = a - Math.floor(a);
-
+        
             // 判断图片的左右滑动 如果判断thr
             // 如果向左滑动
             if (_this.vx > 0) {
@@ -1012,6 +1020,8 @@ const _Swiper = function (CScroll) {
     };
     /**
      * @method 轮播图跳转
+     * @param {Number} 跳转页数
+     * @param {Number} 跳转所需时间
      */
     CScroll.prototype.swiperTo = function(num,time){
         let _num = num;
@@ -1033,7 +1043,23 @@ const _Swiper = function (CScroll) {
 
 
     };
+    /**
+     * @method 轮播图自动播放
+     * @param {Number} 时间
+     * @param {String} 转动方向
+     */
+    CScroll.prototype.swiperAuto = function (time,dire) {
+        if(dire === 'left'){
+            this._this.vx = -1;
+        }else if(dire === 'right' || dire === undefined){
+            this._this.vx = 1;
+        }
 
+        // this.timeAuto = setInterval(()=>{
+        //     that.changeNum()
+        // },time)
+        
+    };
 
 
 

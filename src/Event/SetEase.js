@@ -7,7 +7,7 @@ const _SetEase = function (CScroll) {
                 this.loopJump()
                 return
             }
-        }
+        } 
 
         if (this.$op.scrollX) {
             //Left

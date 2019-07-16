@@ -113,46 +113,42 @@ const _SetPos = function (CScroll) {
         let posTo = to
         let distance = null
         let timeNum = time || 0.01
- 
-        if (this.$op.scrollX) {
-            distance = posTo - this.$pos.x
-        } else if (!this.$op.scrollX) {
+
+        window.cancelAnimationFrame(this.$event.scrollTo)
+
+        this.$op.scrollX ?
+            distance = posTo - this.$pos.x :
             distance = posTo - this.$pos.y
-        }
 
-
-        scrollToPos.call(this, distance, to)
-
-
-        function scrollToPos(distance, to) {
-            let _time = null
-            let posTo = to
-            
-            if (this.$op.scrollX && Math.abs(this.$pos.x) === Math.abs(posTo)) {
-                window.cancelAnimationFrame(_time)
-                return
-            } else if (!this.$op.scrollX && Math.abs(this.$pos.y) === Math.abs(posTo)) {
-                window.cancelAnimationFrame(_time)
+        // 取消移动
+        if (this.$op.scrollX) {
+            if (Math.floor(to) === Math.floor(this.$pos.x) || Math.ceil(to) === Math.ceil(this.$pos.x)) {
+                this.$pos.x = to
+                this._setPos()
+                window.cancelAnimationFrame(this.$event.scrollTo)
                 return
             }
-
-
-            if (this.$op.scrollX) {
-                this.$pos.x += distance * timeNum
-            } else if (!this.$op.scrollX) {
-                this.$pos.y += distance * timeNum
+        } else {
+            if (Math.floor(to) === Math.floor(this.$pos.y) || Math.ceil(to) === Math.ceil(this.$pos.y)) {
+                this.$pos.y = to
+                this._setPos()
+                window.cancelAnimationFrame(this.$event.scrollTo)
+                return
             }
-            this._setPos()
-            _time = window.requestAnimationFrame(scrollToPos.bind(this, distance, to))
         }
 
+        // 元素的移动
+        this.$op.scrollX ?
+            this.$pos.x += distance * timeNum :
+            this.$pos.y += distance * timeNum
 
-
+        this._setPos()
+        
+        this.$event.timeTo = window.requestAnimationFrame(() => {
+            this.scrollTo(to, time)
+        })
 
     }
-
-
-
 }
 
 export default _SetPos

@@ -88,8 +88,10 @@ const _Defalut = function (CScroll) {
             touchEndFunArr: [],             //  touchend事件数组
             // onPullDown: function () {},     //pullDown事件
             // onPullUp: function () {},       //pullUp事件
-            time: null,                      //惯性计时器
-            timer: null,                     //回弹计时器
+            time: null,                      // 惯性计时器
+            timer: null,                     // 回弹计时器
+            timeAuto: null,                  // 轮播图自动播放计时器
+            timeTo:null                      // 跳转页面计时器
         }
 
     }

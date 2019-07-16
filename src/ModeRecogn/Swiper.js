@@ -6,6 +6,9 @@ const _Swiper = function (CScroll) {
         createLoop(this)
         createBtn(this)
 
+        // 是否开启自动播放
+        if(this.$op.swiper.autoPlay) this.swiperAuto(this.$op.swiper.autoPlay)
+        
 
     }
 
@@ -56,6 +59,7 @@ const _Swiper = function (CScroll) {
     function createBtn(that) {
         if (!that.$op._swiper && !that.$op.swiper.btn) return
     }
+    
     /**
      * @method 切换图片数页 
      */
@@ -66,7 +70,7 @@ const _Swiper = function (CScroll) {
         if (this.$op.scrollX) {
             let a = Math.abs(this.$pos.x / this.$dom.el_w)
             let b = a - Math.floor(a)
-
+        
             // 判断图片的左右滑动 如果判断thr
             // 如果向左滑动
             if (_this.vx > 0) {
@@ -160,6 +164,8 @@ const _Swiper = function (CScroll) {
     }
     /**
      * @method 轮播图跳转
+     * @param {Number} 跳转页数
+     * @param {Number} 跳转所需时间
      */
     CScroll.prototype.swiperTo = function(num,time){
         let _num = num
@@ -181,7 +187,24 @@ const _Swiper = function (CScroll) {
 
 
     }
+    /**
+     * @method 轮播图自动播放
+     * @param {Number} 时间
+     * @param {String} 转动方向
+     */
+    CScroll.prototype.swiperAuto = function (time,dire) {
+        let that = this
+        if(dire === 'left'){
+            this._this.vx = -1
+        }else if(dire === 'right' || dire === undefined){
+            this._this.vx = 1
+        }
 
+        // this.timeAuto = setInterval(()=>{
+        //     that.changeNum()
+        // },time)
+        
+    }
 
 
 
